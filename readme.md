@@ -1,140 +1,88 @@
-# Primer proyecto de automatización con Playwright
+# Diseño de casos de prueba (AAA)
 
-En este branch comenzamos a trabajar con Playwright, una herramienta de automatización de pruebas para aplicaciones web.
+En este branch comenzamos a organizar mejor los casos de prueba.
 
-## El objetivo de este repositorio es:
+Hasta ahora los tests estaban escritos directamente dentro de los archivos `.spec.js`, repitiendo acciones como abrir la página o realizar login.
 
-+ crear el primer proyecto Playwright
+En este punto del curso introducimos dos conceptos importantes:
 
-+ comprender la estructura básica del framework
+- estructura de test **AAA (Arrange / Act / Assert)**
+- **reutilización de acciones** mediante funciones helper
 
-+ ejecutar los primeros tests automatizados
+El objetivo es escribir tests más claros y evitar repetir código.
 
-+ ver distintas formas de generar un caso de prueba
+---
 
-## Crear el proyecto Playwright
+# Estructura AAA
 
-Para crear el proyecto se utilizó el siguiente comando:
+Los tests ahora siguen la siguiente estructura:
 
-```
-npm init playwright@latest
-```
 
-Este comando genera automáticamente:
+Arrange → preparar el escenario
+Act → ejecutar la acción que queremos probar
+Assert → validar el resultado esperado
 
-+ estructura del proyecto
 
-+ instalación de Playwright
+Ejemplo:
 
-+ instalación de navegadores
+```javascript
+test('Login exitoso', async ({ page }) => {
 
-+ archivos de configuración
+  // Arrange
+  await goToLogin(page)
 
-Después de ejecutar el comando se creó la carpeta del proyecto con los archivos necesarios.
+  // Act
+  await login(page, username, password)
 
-## Ejecutar los tests
+  // Assert
+  await validarDashboard(page)
 
-Para ejecutar los casos de prueba utilizamos el comando:
-
-```
-npx playwright test
-```
-
-Este comando ejecuta todos los archivos **.spec.js** que se encuentran dentro de la carpeta tests.
-
-## Ejecutar en modo visual
-
-También podemos ejecutar los tests en modo interfaz con:
-
-```
-npx playwright test --ui
+})
 ```
 
-Esto permite ver los tests ejecutándose y analizar los resultados.
+Esto permite que el test sea más fácil de leer y entender.
 
-**Ejemplo 1 — Test generado con Codegen**
+## Nueva estructura del proyecto
 
-Playwright permite generar casos de prueba automáticamente usando una herramienta llamada Codegen.
+En este branch se introducen nuevas carpetas para organizar mejor el proyecto.
 
-## El siguiente comando abre un navegador y una grabadora de acciones:
-```
-npx playwright codegen https://opensource-demo.orangehrmlive.com
-```
 
-**A partir de ese momento:**
++ data/
++ helpers/
++ tests/
 
-Playwright abre la página indicada.
+### data/
 
-Cada acción realizada en el navegador se transforma en código.
+Contiene datos de prueba que serán utilizados por los tests.
 
-El código puede copiarse y guardarse como un test.
+Ejemplo:
 
-## Este método es útil para:
+data/users.json
 
-* aprender locators
+**Separar los datos del código permite:**
 
-* entender cómo Playwright interactúa con los elementos
++ reutilizar información
 
-* generar rápidamente un caso de prueba inicial
++ modificar datos sin cambiar los tests
 
-Sin embargo, el código generado normalmente necesita ser limpiado y simplificado.
++ preparar escenarios de prueba más fácilmente
 
-**Ejemplo 2 — Test extendido**
+### helpers/
 
-En este ejemplo se utilizó nuevamente Codegen, pero se realizaron más acciones dentro de la página.
+Contiene funciones reutilizables que representan acciones comunes dentro de la aplicación.
 
-El objetivo de este test es mostrar que Playwright puede:
-
-1) interactuar con distintos elementos
-
-2) completar formularios
-
-3) validar mensajes de error
-
-Este tipo de tests suele utilizarse para explorar una aplicación antes de escribir automatizaciones más organizadas.
-
-**Ejemplo 3 — Primer test escrito manualmente**
-
-En este ejemplo el test fue escrito manualmente para mostrar una estructura más clara.
-
-El flujo del test es:
+**Ejemplos:** 
 
 1) abrir la página de login
 
-2) completar usuario y contraseña
+2) realizar login
 
-3) hacer clic en login
+3) validar que el dashboard esté visible
 
-4) validar que el acceso fue exitoso
+Esto evita repetir el mismo código en cada caso de prueba.
 
-La validación se realiza comprobando que la URL corresponda al dashboard del sistema.
+### tests/
 
-**Ejemplo 4 — Validación de elementos del dashboard**
+Contiene los casos de prueba automatizados.
 
-Este test muestra cómo validar que un elemento está visible en la aplicación.
-
-Pasos del test:
-
-1) realizar login
-
-2) validar redirección al dashboard
-
-3) verificar que el título "Dashboard" esté visible
-
-Esto permite comprobar que la página se cargó correctamente.
-
-**Ejemplo 5 — Validación de un módulo del sistema**
-
-En este ejemplo se muestra cómo recorrer elementos de una lista usando un loop.
-
-El objetivo del test es:
-
-1) obtener todos los módulos del menú lateral
-
-2) recorrerlos uno por uno
-
-3) verificar si existe el módulo PIM
-
-Esto introduce un concepto importante en automatización:
-analizar múltiples elementos de la interfaz utilizando lógica de programación.
---
+Cada archivo .spec.js representa un conjunto de pruebas.
