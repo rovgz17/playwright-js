@@ -37,6 +37,31 @@ Se recomienda instalar la versión LTS (Long Term Support).
 Una vez instalado repetir los pasos de verificación.
 ___
 
+- Si ninguno los comandos anteriores tuvo exito y vemos un mensaje con la leyenda:
+
+```
+ 'C:\Program Files (x86)\XXXXX\XXXX\playwright.ps1' install --with-deps chromium
+& : File C:\Program Files (x86)\XXXXX\XXXX\playwright.ps1 cannot be loaded because running scripts is disabled on
+this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
+At line:1 char:3
+
+& 'C:\Program Files (x86)\XXXXX\XXXX\playwright.ps1' install --with- ...
+
+CategoryInfo : SecurityError: (:) [], PSSecurityException
+FullyQualifiedErrorId : UnauthorizedAccess
+```
+Tendremos que ejecutar:
+``` Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope LocalMachine ``` 
+ó
+
+``` Set-ExecutionPolicy Unrestricted ```
+
+y a continuación contesta con un "S" o "Y", para indicar que quieres modificarla. 
+
+``` Get-ExecutionPolicy -List ``` - Si fuera necesario verificar cuales son las "policy execution" podran verlas listadas.
+
+___
+
 ### PACKAGE.JSON
 
 package.json es el archivo principal de un proyecto Node.
